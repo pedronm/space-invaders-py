@@ -6,20 +6,21 @@ from pygame import mixer
 # 1. Initialize the pyagame
 pygame.init()
 
-# 2. Create the screen
+# 2. Create the screen - 
 screen = pygame.display.set_mode((800,600))
 
-# Soundtrack
+# 3. Soundtrack
 # Music: Eric Skiff - Song Name - Resistor Anthems
 # Available at http://EricSkiff.com/music
 mixer.music.load('./assets/sounds/10_Arpanauts.mp3')
 mixer.music.play(-1)
 
-# 2.1 Background
+# 4. Background
 background = pygame.image.load('./assets/images/background.png')
-# 3. Caption and icon
-pygame.display.set_caption("Space Invaders")
+
+# 5. Caption and icon
 icon = pygame.image.load('./assets/images/ufo.png')
+pygame.display.set_caption("Space Invaders")
 pygame.display.set_icon(icon)
 
 # 4. Player
@@ -28,7 +29,7 @@ playerX = 370
 playerY = 480
 playerX_change = 0
 
-# 5 Enemy
+# 5. Enemy
 enemyImg = []
 enemyX = []
 enemyY = []
@@ -36,18 +37,20 @@ enemyX_change = []
 enemyY_change = []
 num_of_enemies = 6
 
-for i in range(num_of_enemies):
-    enemyImg.append(pygame.image.load('./assets/images/enemy.png'))
-    enemyX.append(random.randint(0, 735))
-    enemyY.append(random.randint(50, 150))
-    enemyX_change.append(4)
-    enemyY_change.append(40)
+# 6. Multiply Enemies Function
+def print_enemies():
+    for i in range(num_of_enemies):
+        enemyImg.append(pygame.image.load('./assets/images/enemy.png'))
+        enemyX.append(random.randint(0, 735))
+        enemyY.append(random.randint(50, 150))
+        enemyX_change.append(4)
+        enemyY_change.append(40)
 
-# 5 Bullet
+print_enemies()
 
+# 7. Bullet
 # Ready You can't see the bullet on the screen
 # Fire - The bullet is currently moving
-
 bulletImg = pygame.image.load('./assets/images/bullet.png')
 bulletX = 0
 bulletY = 400
@@ -55,24 +58,39 @@ bulletX_change = 0
 bulletY_change = 10
 bullet_state = "ready"
 
-# Score
+# 8. Score
 score_value = 0
 font = pygame.font.Font('./assets/fonts/SketchRockwell-Bold.ttf', 32)
 
 textX = 10
 textY = 10
 
-# Game Over Text
+# 9. Game Over Text
 over_font = pygame.font.Font('./assets/fonts/bombfact.ttf', 90)
+is_game_over = False
+
+# 10. Restart Game Text
+restart_font = pygame.font.Font('./assets/fonts/bombfact.ttf', 64)
+restart_text = restart_font.render("Want to Play Again?", True, (255, 255, 255))
+
 
 # Score Function
 def show_score(x,y):
     score = font.render("Score :" + str(score_value), True, (255, 255, 255))
     screen.blit(score, (x,y))
 
+# Game Over Function
 def game_over_text():
     over_text = over_font.render("GAME OVER", True, (255, 255, 255))
     screen.blit(over_text, (200, 250))
+    is_game_over = True
+    restart_game_text()
+
+# Restart Function
+def restart_game_text():
+    if(is_game_over):
+        screen.blit(restart_text, (200, 250))
+        running = False
 
 # 4.1 Create function Player
 def player(x, y):
@@ -96,6 +114,14 @@ def isCollision(enemyX, enemyY, bulletX, bulletY):
         return True
     else:
         return False
+
+# End Game Loop
+while running == False:
+    #Captura qualquer botão pressionado
+    for event in pygame.event.get():
+        if event.type == pygame.KEYDOWN:
+            running == True
+            print_enemies()
 
 # 6. Game Loop
 running = True
